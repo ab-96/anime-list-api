@@ -1,6 +1,8 @@
 package com.example.animeListAPI;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@CrossOrigin(origins  =  "http://localhost:3000")
 @RestController //dictates that this class stores our endpoints
 public class AnimeListController {
 
@@ -20,43 +23,38 @@ public class AnimeListController {
     }
 
     @GetMapping("/completed")
-    public List getCompletedAnime() {
+    public ResponseEntity getCompletedAnime() {
         List<AnimeList> completedAnime = repository.findAll();
-        return completedAnime.stream().filter(anime ->
-        anime.getCompleted() == true
-        ).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(completedAnime.stream().filter(anime ->
+                anime.getCompleted() == true
+        ).collect(Collectors.toList()));
         //transform back to list
     }
 
     @GetMapping("/watching")
-    public List getCurrentlyWatching() {
+    public ResponseEntity<List<AnimeList>> getCurrentlyWatching() {
         List<AnimeList> currentlyWatchingAnime = repository.findAll();
-        return currentlyWatchingAnime.stream().filter(anime ->
+
+        return ResponseEntity.status(HttpStatus.OK).body(currentlyWatchingAnime.stream().filter(anime ->
                 anime.getCompleted() == false
-        ).collect(Collectors.toList());
+        ).collect(Collectors.toList()));
     }
 
     @PostMapping("/add")
-    public String addAnime(@RequestBody AnimeList animeList)  {
+    public ResponseEntity addAnime(@RequestBody AnimeList animeList)  {
         repository.save(animeList);
-        return "Anime added to list";
+        return ResponseEntity.status(HttpStatus.OK).body("Anime added");
     }
 
     @Transactional
     @DeleteMapping("/remove/{id}")
-    public String removeAnime(@PathVariable String id) {
+    public ResponseEntity<String> removeAnime(@PathVariable String id) {
         repository.deleteGreetingByid(Integer.parseInt(id));
-       return "Greeting with ID " + id + "has been deleted";
+        return ResponseEntity.status(HttpStatus.OK).body("Greeting with ID " + id + " has been deleted");
     }
-
-
-
-
 
     @GetMapping("/all-anime/{name}")
-    public String getAnimeInfo(@PathVariable String name) {
-        return "I will display info about " + name;
+    public ResponseEntity<String> getAnimeInfo(@PathVariable String name) {
+        return ResponseEntity.status(HttpStatus.OK).body("I will display info about " + name);
     }
-
-
 }

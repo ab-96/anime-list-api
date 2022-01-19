@@ -19,7 +19,6 @@ public class AnimeList {
 
   }
 
-
     public AnimeList(int id, String title, int rating, int progress, boolean completed) {
         this.id = id;
         this.title = title;
