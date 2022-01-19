@@ -22,11 +22,12 @@ public class AnimeListController {
         return repository.findAll();
     }
 
+
     @GetMapping("/completed")
     public ResponseEntity getCompletedAnime() {
         List<AnimeList> completedAnime = repository.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(completedAnime.stream().filter(anime ->
-                anime.getCompleted() == true
+                anime.getCompleted()
         ).collect(Collectors.toList()));
         //transform back to list
     }
@@ -36,7 +37,7 @@ public class AnimeListController {
         List<AnimeList> currentlyWatchingAnime = repository.findAll();
 
         return ResponseEntity.status(HttpStatus.OK).body(currentlyWatchingAnime.stream().filter(anime ->
-                anime.getCompleted() == false
+                !anime.getCompleted()
         ).collect(Collectors.toList()));
     }
 
