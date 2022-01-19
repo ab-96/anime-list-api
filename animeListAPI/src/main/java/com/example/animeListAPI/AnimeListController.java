@@ -40,6 +40,7 @@ public class AnimeListController {
                 !anime.getCompleted()
         ).collect(Collectors.toList()));
     }
+//red
 
     @PostMapping("/add")
     public ResponseEntity addAnime(@RequestBody AnimeList animeList)  {
